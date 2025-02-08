@@ -1,78 +1,75 @@
 
-// const authorNames = [
-//     {
-//         lowerCaseName: "gustavofring",
-//         picturePath: "/img/Gus_Fring.jpg"
-//     },{
-//         lowerCaseName: "hankschrader",
-//         picturePath: "/img/Hank_Schrader.jpg"
-//     },{
-//         lowerCaseName: "jessepinkman",
-//         picturePath: "/img/Jesse_Pinkman.jpg"
-//     },{
-//         lowerCaseName: "lalosalamanca",
-//         picturePath: "/img/Lalo_Salamanca.jpg"
-//     },{
-//         lowerCaseName: "mikeehrmantraut",
-//         picturePath: "/img/Mike_Ehrmantraut.jpg"
-//     },{
-//         lowerCaseName: "saulgoodman",
-//         picturePath: "/img/Saul_Goodman.jpg"
-//     },{
-//         lowerCaseName: "skylerwhite",
-//         picturePath: "/img/Skyler_White.jpg"
-//     },{
-//         lowerCaseName: "tiosalamanca",
-//         picturePath: "/img/Tio_Salamanca.jpg"
-//     },{
-//         lowerCaseName: "tucosalamanca",
-//         picturePath: "/img/Tuco_Salamanca.jpg"
-//     },{
-//         lowerCaseName: "walterwhite",
-//         picturePath: "/img/Walter_White.jpg"
-//     }
+// Fetch the images array from the API
+async function fetchBreakingBadImage() {
+    const apiKey = '9075ede92e92c0c1847d756a02788d3a';
+    const url = `https://api.themoviedb.org/3/tv/1396/images?api_key=${apiKey}`;
+    try {
+        const response = await fetch(url);
+        const data = await response.json();
+        const postersEN = data.posters.filter(poster => poster.iso_639_1 === 'en').map( p => p.file_path);
+        const backdropsEN = data.backdrops.filter(backdrop => backdrop.iso_639_1 === 'en').map( b => b.file_path);
 
-// ]
-// function changeBackgroundByAuthor(authorResponse){
-//     const authorObj = authorNames.filter((authorName) => authorName.lowerCaseName.includes( authorResponse.toLowerCase().replace(" ","")))
-//     const imagePath = authorObj != undefined && authorObj.length > 0 ? authorObj[0].picturePath : "/img/Breaking_bad_poster.jpg";
-//     return imagePath;
-// }
+    const imagesObject = {
+        posters: postersEN,
+        backdrops: backdropsEN,
+    }
+    return imagesObject;
+    } catch (error) {
+        console.error('Error fetching image:', error);
+    }
+}
 
-function callPhrasesApiByTime(apiUrl, time) {
+// Function for random background image
+function changeBackground(imagesCollection, screenWidth = 768) {
+    let imageUrl = '';
+    let randomIndex = 0;
+    if (screenWidth >= 768) {
+        randomIndex = Math.floor(Math.random() * imagesCollection.backdrops.length);
+        imageUrl = `https://image.tmdb.org/t/p/w500${imagesCollection.backdrops[randomIndex]}`;
+    } else {
+        randomIndex = Math.floor(Math.random() * imagesCollection.posters.length);
+        imageUrl = `https://image.tmdb.org/t/p/w500${imagesCollection.posters[randomIndex]}`;
+    }
+    return imageUrl;
+}
+
+async function callPhrasesApiByTime(apiUrl, time) {
+    const domElement = {
+        quoteElement : document.querySelector(".quote"),
+        authorElement : document.querySelector(".author"),
+        mainElement : document.querySelector(".main"),
+    };
+    const imagesCollection = await fetchBreakingBadImage();
 
     async function fetchData() {
         try {
             const response = await fetch(apiUrl);
-
             if (!response.ok) {
                 throw new Error(`Error in the response: ${response.status} - ${response.statusText}`);
             }
-
             const data = await response.json();
-            let quoteElement = document.querySelector(".quote");
-            let authorElement = document.querySelector(".author");
-            let mainElement = document.querySelector(".main");
-
             const quoteResponse = data[0].quote;
             const authorResponse = data[0].author;
 
             // Animation
-            quoteElement.style.transition = "opacity 0.8s";
-            authorElement.style.transition = "opacity 0.8s";
-            mainElement.style.transition = "background-image 0.8s";
-            quoteElement.style.opacity = 0;
-            authorElement.style.opacity = 0;
+            domElement.quoteElement.style.transition = "opacity 0.8s";
+            domElement.authorElement.style.transition = "opacity 0.8s";
+            domElement.mainElement.style.transition = "background-image 0.8s";
+            domElement.quoteElement.style.opacity = 0;
+            domElement.authorElement.style.opacity = 0;
 
+            const screenWidth = window.innerWidth;
+            console.log('Ancho de la pantalla:', screenWidth);
+
+            // Change background + show quote and author
             setTimeout(() => {
-                // let changingBackground = changeBackgroundByAuthor(authorResponse);
-                // mainElement.style.backgroundImage = `url(${changingBackground})`;
+                let changingBackground = changeBackground(imagesCollection, screenWidth);
+                domElement.mainElement.style.backgroundImage = `url(${changingBackground})`;
 
-                quoteElement.innerHTML = quoteResponse;
-                authorElement.innerHTML = authorResponse;
-
-                quoteElement.style.opacity = 1;
-                authorElement.style.opacity = 1;
+                domElement.quoteElement.innerHTML = quoteResponse;
+                domElement.authorElement.innerHTML = authorResponse;
+                domElement.quoteElement.style.opacity = 1;
+                domElement.authorElement.style.opacity = 1;
             }, 800);
 
         } catch (error) {
@@ -81,6 +78,7 @@ function callPhrasesApiByTime(apiUrl, time) {
     }
 
     fetchData();
+    // Call the function every 12 seconds
     setInterval(fetchData, time);
 }
 

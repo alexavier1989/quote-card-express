@@ -1,6 +1,5 @@
 "use strict";
 
-const { log } = require("console");
 const exp = require("constants");
 const express = require("express");
 const path = require("path");
