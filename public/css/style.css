@@ -1,0 +1,124 @@
+@import url("reset.css");
+
+html {
+	padding: 0;
+	margin: 0;
+}
+
+body {
+	color: #333333;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 16px;
+	line-height: 1.6;
+	background-color: #f9f9f9;
+	display: flex;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+	font-family: "Courier New", Courier, monospace;
+	font-weight: bold;
+	line-height: 1;
+	text-transform: uppercase;
+	margin: 0 0 1.6rem;
+}
+
+p {
+	font-family: Arial, Helvetica, sans-serif;
+	line-height: 1.6;
+	margin: 0 0 1.6rem;
+}
+
+a {
+	color: #0056b3;
+	border-bottom: 2px solid transparent;
+	transition: all 0.5s ease-in-out;
+}
+
+a:hover {
+	color: #002348;
+	border-bottom: 2px solid #002348;
+}
+
+hr {
+	margin: 3.2rem 1.6rem;
+	color: #555555;
+	border-color: #555555;
+}
+
+/* Layout */
+.main {
+	width: 100%;
+	min-width: 444px;
+	height: auto;
+	background-image: url("/img/Breaking_bad_poster.jpg");
+	background-color: rgb(65, 65, 65);
+	background-blend-mode: soft-light;
+	background-repeat: no-repeat;
+	background-position: center;
+	background-size: cover;
+	padding-top: 30px;
+	padding-bottom: 30px;
+	display: flex;
+	justify-content: center;
+}
+
+.container {
+	padding: 3em;
+	width: 85%;
+	max-width: 1000px;
+	color: #f6d57a;
+	border-radius: 2px;
+	border: 1px solid #f0f5c0;
+	align-content: center ;
+}
+
+  .quote_article {
+	position: relative;
+	font-size: 2em;
+	line-height: 2em;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-content: center;
+  }
+
+  .quote_article:before {
+	content: open-quote;
+  }
+  
+  .quote_article:after {
+	content: close-quote;
+	align-self: flex-end;
+  }
+
+  .quote_article:before,
+  .quote_article:after {
+	font-size: 4em;
+	top: .2em;
+	position: relative;
+  }
+
+.quote_article p, .quote_article small{
+ text-align: center;
+}
+
+
+/* Media Queries */
+
+@media (min-width: 699px) {
+
+	/* CSS HERE */
+
+}
+
+/* Desktop Media Query */
+@media (min-width: 999px) {
+
+	/* CSS HERE */
+
+}
